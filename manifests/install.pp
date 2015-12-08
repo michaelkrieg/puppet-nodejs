@@ -158,7 +158,12 @@ define nodejs::install (
       }
     }
 
-    ensure_packages([ 'python', $gplusplus_package, 'make' ])
+    $python_package_name = 'python'
+    if (($::osfamily == 'RedHat') && ($::operatingsystem == 'Amazon')) {
+      $python_package_name = 'python27'
+    }
+
+    ensure_packages([ $python_package_name, $gplusplus_package, 'make' ])
 
     exec { "nodejs-make-install-${node_version}":
       command => "./configure --prefix=${node_unpack_folder} && make && make install",
@@ -169,7 +174,7 @@ define nodejs::install (
       timeout => 0,
       require => [
         Exec["nodejs-unpack-${node_version}"],
-        Package['python'],
+        Package[$python_package_name],
         Package[$gplusplus_package],
         Package['make']
       ],
