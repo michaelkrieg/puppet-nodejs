@@ -158,9 +158,10 @@ define nodejs::install (
       }
     }
 
-    $python_package_name = 'python'
-    if (($::osfamily == 'RedHat') && ($::operatingsystem == 'Amazon')) {
+    if (($::osfamily == 'RedHat') and ($::operatingsystem == 'Amazon')) {
       $python_package_name = 'python27'
+    } else {
+      $python_package_name = 'python'
     }
 
     ensure_packages([ $python_package_name, $gplusplus_package, 'make' ])
